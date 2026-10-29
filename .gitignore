@@ -1,0 +1,9 @@
+# Keep local Salesforce authentication and working files out of this reference repo.
+.sf/
+.sfdx/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.log
