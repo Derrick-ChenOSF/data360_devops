@@ -24,26 +24,23 @@ Replace the alias and manifest name. This downloads configuration to the local p
 
 Review the command result. If it reports a job still running, use the job ID and the CLI's retrieval reporting command to check it. Do not start cleanup while retrieval is incomplete.
 
-## Using the existing retrieval helper
+## Using the included retrieval helper
 
-Some projects have a helper named `retrieve-data-cloud-data-kit.ps1`. It obtains the Data Kit member list, writes a manifest, retrieves metadata, and offers cleanup and validation.
+The [retrieval helper](../scripts/retrieve-data-cloud-data-kit.ps1) obtains the Data Kit member list, writes a manifest, retrieves metadata, and offers cleanup and validation. See its [full guide](scripts.md) for parameters and precautions.
 
-**That helper is not bundled with this reference repository.** The following notes describe the version these practices came from; check your project's copy before running it.
-
-- It retrieves from the Salesforce CLI's default org.
+- It retrieves from the org explicitly named by `-SourceOrg`.
 - It replaces `manifest\<DeveloperName>-data-kit-package.xml`.
 - Pressing Enter at either optional prompt skips that step.
-- Its `-OutputDir` option changes the retrieval destination, but cleanup and validation still use the standard project locations. Avoid that combination unless the helper has been updated.
-- The reviewed copy used `******` as its authorization header instead of the retrieved token. A maintainer must fix and test that before use. Never paste a token into source code.
+- With `-OutputDir`, both cleanup and validation must be explicitly skipped so they cannot accidentally use another folder.
+- It reads the access token from Salesforce CLI and uses it in memory. Never paste a token into source code.
 
-For a reviewed, working copy, set the source default from inside your project, then retrieve without automatic cleanup or validation:
+For example, retrieve without cleanup or validation:
 
 ```powershell
-sf config set target-org=source-sandbox
-.\scripts\retrieve-data-cloud-data-kit.ps1 -DevName "Example_Kit" -SkipCleanup $true -SkipValidation $true
+& "C:\Tools\data360_devops\scripts\retrieve-data-cloud-data-kit.ps1" -ProjectPath "C:\Projects\Example" -SourceOrg source-sandbox -DevName "Example_Kit" -SkipCleanup $true -SkipValidation $true
 ```
 
-Setting the default affects later commands that do not explicitly name an org. Prefer explicit `--target-org` values in manual commands.
+Replace the example paths and names with your own. The helper does not change your default org.
 
 ## 3. Review the downloaded files
 
@@ -71,8 +68,8 @@ Its orphan-Lookup check compares against local relationship files; it does not e
 
 ## Comparing different names
 
-Some projects use `compare-data-kit-manifests.ps1` to make names consistent for comparison. Despite its name, the reviewed version creates a renamed/rewritten copy; it does not produce a comparison report by itself.
+The [comparison helper](../scripts/compare-data-kit-manifests.ps1) makes names consistent in a separate copy. Despite its name, it does not produce a comparison report by itself. See the [script guide](scripts.md) for an example.
 
-Keep normalization separate from deployable metadata. Inspect both paths first: the helper removes an existing output folder before recreating it. Never set its output path to your original source folder.
+Keep normalization separate from deployable metadata. The included version refuses existing output and output inside the source; it does not delete an existing folder.
 
 Next: [Validate and deploy](validate-and-deploy.md).

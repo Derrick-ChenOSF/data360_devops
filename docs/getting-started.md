@@ -21,7 +21,7 @@ Retrieving a Data Kit is not a backup or transfer of all customer data.
 
 - Access to the source and target orgs, with permissions for the work you need to do.
 - Salesforce CLI installed on your computer.
-- PowerShell. If using the existing helper scripts, use PowerShell 7; some use newer .NET functions.
+- PowerShell 7 or later for the included helper scripts.
 - A Salesforce project folder containing `sfdx-project.json`.
 - The Data Kit's Developer Name, also called its API name.
 - Any required target Data Cloud connections and data spaces identified with your administrator.
@@ -76,4 +76,4 @@ Replace this path with your project location. Confirm that `sfdx-project.json` i
 
 Save or back up existing work before retrieving metadata. Retrieval can change local files.
 
-Next: [Retrieve and prepare a Data Kit](retrieve-and-prepare.md).
+Next: [Retrieve and prepare a Data Kit](retrieve-and-prepare.md), or open the [script guides](scripts.md) for copy-and-paste helper commands.

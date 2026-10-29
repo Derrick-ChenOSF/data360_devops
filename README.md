@@ -2,7 +2,7 @@
 
 A small reference library for moving Salesforce Data Cloud (Data 360) configuration between environments.
 
-This is a place to keep practical steps, useful commands, and lessons learned. It is **not an automated deployment tool**. There are no GitHub workflows or release pipelines.
+This is a place to keep practical steps, useful commands, lessons learned, and a few optional PowerShell helpers. There are no GitHub workflows or release pipelines.
 
 ## Start here
 
@@ -12,6 +12,7 @@ This is a place to keep practical steps, useful commands, and lessons learned. I
 | [Retrieve and prepare a Data Kit](docs/retrieve-and-prepare.md) | Download configuration and review it before deployment |
 | [Validate and deploy](docs/validate-and-deploy.md) | Check the target, deploy metadata, and complete Data Kit setup |
 | [Troubleshooting](docs/troubleshooting.md) | Recognize common problems and decide what to check |
+| [Script guides](docs/scripts.md) | Use the included retrieval, runtime deployment, and comparison helpers |
 
 ## The basic process
 
@@ -29,6 +30,7 @@ This is a place to keep practical steps, useful commands, and lessons learned. I
 - Generic instructions and commands with example names.
 - Lessons learned, with their limitations explained.
 - Links to official documentation.
+- Generic helper scripts, with usage guides and limitations.
 
 Keep customer metadata, customer names, org URLs, passwords, access tokens, authentication files, and raw deployment logs in the appropriate private project, not here.
 

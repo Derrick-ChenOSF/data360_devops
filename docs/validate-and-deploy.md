@@ -45,21 +45,21 @@ Do not resubmit a deployment just because the local wait expired.
 
 Metadata installation can provide templates and definitions without creating every live Data Cloud component. Follow the relevant Data Kit installation process in Salesforce and check what still needs to be created or configured.
 
-Some projects use `deploy-data-kit-components.ps1` to submit component creation through the Connect REST API. That helper is not included here.
+The included [runtime component helper](../scripts/deploy-data-kit-components.ps1) submits component creation through the Connect REST API. Read its [guide and limitations](scripts.md) first.
 
-The reviewed helper:
+The helper:
 
 - Reads the local Data Kit definition's deployment order.
 - Maps Data Streams, Data Graphs, Market Segments, and Identity Resolution entries to API requests.
 - Assumes a CRM connector and derives the connection org ID from the target org. This is not suitable for every connection arrangement.
-- Warns about unsupported entries without submitting them.
+- Stops before submission if it finds unsupported entries.
 - Can wait for component deployment logs and report failures.
-- Uses an authorization placeholder in the reviewed copy, which needs correction and testing before use.
+- Uses the Salesforce CLI access token in memory; no token should be saved in the script.
 
-For a reviewed, working project copy, preview its payload first:
+Preview its payload first:
 
 ```powershell
-.\scripts\deploy-data-kit-components.ps1 -TargetOrg target-sandbox -DataKitName "Example_Kit" -WhatIf
+& "C:\Tools\data360_devops\scripts\deploy-data-kit-components.ps1" -ProjectPath "C:\Projects\Example" -TargetOrg target-sandbox -DataKitName "Example_Kit" -WhatIf
 ```
 
 `-WhatIf` avoids submitting component creation, but the helper still reads local metadata and authenticates to Salesforce.
@@ -67,7 +67,7 @@ For a reviewed, working project copy, preview its payload first:
 Only after reviewing the target, payload, data space, and connector assumptions should an authorized user run:
 
 ```powershell
-.\scripts\deploy-data-kit-components.ps1 -TargetOrg target-sandbox -DataKitName "Example_Kit" -Wait
+& "C:\Tools\data360_devops\scripts\deploy-data-kit-components.ps1" -ProjectPath "C:\Projects\Example" -TargetOrg target-sandbox -DataKitName "Example_Kit" -Wait
 ```
 
 This can create live components. Keep the confirmation prompt enabled. A submission response is not proof that all components completed.
