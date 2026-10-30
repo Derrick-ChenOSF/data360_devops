@@ -45,5 +45,6 @@ Try the process in a sandbox first. Follow your team's approval process before c
 
 - [Salesforce CLI command reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
 - [Salesforce Data Cloud developer documentation](https://developer.salesforce.com/docs/data/data-cloud-dev/guide/)
+- [TDX 2026: Automate Data 360 Deployments: DevOps for Data Kits](https://www.salesforce.com/plus/experience/tdx_2026/series/developers_at_tdx_2026/episode/episode-s1e3) - Session recording on Salesforce+.
 
 Command behavior and supported metadata can change. Check the current documentation when your installed version behaves differently.
