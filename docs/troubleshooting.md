@@ -20,6 +20,7 @@
 | Metadata succeeds but components are missing | Check the separate Data Kit installation/component setup step and unsupported component types. |
 | The CLI or helper times out | Check server-side job status before retrying. The operation may still be running. |
 | Runtime deployment fails | Review component deployment errors, target data space, connector configuration, namespaces, and supported types. |
+| A Marketing Cloud Next Flow deployment returns `INTERNAL_ERROR` | Missing referenced CMS content was one observed cause. Use the [Flow CMS dependency guide](flow-cms-dependencies.md) to check content references and target prerequisites; other causes are possible. |
 
 ## When asking for help
 

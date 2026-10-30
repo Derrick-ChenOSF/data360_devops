@@ -2,7 +2,7 @@
 
 [Back to the reference index](../README.md)
 
-These are reusable copies of three existing Data Kit helpers. They have been adjusted to remove customer-specific defaults and add basic safeguards. No GitHub automation is required.
+These are reusable copies of existing Data Kit and Marketing Cloud Next deployment helpers. They have been adjusted to remove customer-specific defaults and add basic safeguards. No GitHub automation is required.
 
 ## Before using any script
 
@@ -143,6 +143,16 @@ git --no-pager diff --no-index "C:\Projects\Example\force-app\main\default" "C:\
 ```
 
 Choose folders at the same level. Git returns exit code 1 when it finds differences; that is normal for this comparison.
+
+## 4. Find CMS dependencies in Marketing Cloud Next flows
+
+Script: [find-flow-cms-dependencies.ps1](../scripts/find-flow-cms-dependencies.ps1)
+
+Use this before deploying flows that reference CMS content, including data activation scenarios. Missing content caused `INTERNAL_ERROR` in the scenario that prompted the helper.
+
+It scans local Flow XML and emits unique `DigitalExperience` member entries. It does not retrieve or deploy the content, and the output is not a complete manifest.
+
+See the [full guide](flow-cms-dependencies.md) for examples, manifest placement, and limitations.
 
 ## Verification and limits
 

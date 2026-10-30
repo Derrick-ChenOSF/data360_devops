@@ -102,6 +102,54 @@ try {
         Assert ($parseErrors.Count -eq 0) "$($file.Name) parses."
     }
 
+    $cms = Join-Path $root 'scripts\find-flow-cms-dependencies.ps1'
+    $cmsProject = Join-Path $scratch 'cms-project'
+    $flows = Join-Path $cmsProject 'force-app\main\default\flows'
+    [void] (New-Item -Path (Join-Path $flows 'nested') -ItemType Directory -Force)
+    $flowA = Join-Path $flows 'Example.flow-meta.xml'
+    $flowB = Join-Path $flows 'nested\Other.flow-meta.xml'
+    $flowXml = @'
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+  <actionCalls>
+    <inputParameters><name>contentId</name><value><stringValue>marketing--Workspace.sfdc_cms__email--MC2</stringValue></value></inputParameters>
+    <inputParameters><name>contentId</name><value><stringValue>marketing--Workspace.sfdc_cms__email--MC1&amp;x</stringValue></value></inputParameters>
+    <inputParameters><name>contentId</name><value><stringValue>marketing--Workspace.sfdc_cms__email--MC2</stringValue></value></inputParameters>
+    <inputParameters><name>otherInput</name><value><stringValue>marketing--Workspace--Ignored</stringValue></value></inputParameters>
+    <inputParameters><name>contentId</name><value><elementReference>DynamicContent</elementReference></value></inputParameters>
+  </actionCalls>
+</Flow>
+'@
+    [IO.File]::WriteAllText($flowA, $flowXml)
+    [IO.File]::WriteAllText($flowB, '<Flow><inputParameters><name>contentId</name><value><stringValue> marketing--Workspace--MC3--suffix </stringValue></value></inputParameters></Flow>')
+    $membersFile = Join-Path $cmsProject 'manifest\cms-members.xml'
+    $cmsMembers = @(& $cms -ProjectPath $cmsProject -OutputPath 'manifest\cms-members.xml')
+    Assert ($cmsMembers.Count -eq 3) 'CMS scan recurses and deduplicates.'
+    Assert ($cmsMembers[0] -eq '<members>marketing/Workspace.sfdc_cms__email/MC1&amp;x</members>') 'CMS members are sorted and XML-escaped.'
+    Assert ($cmsMembers[2] -eq '<members>marketing/Workspace/MC3--suffix</members>') 'CMS conversion trims values and splits into only three parts.'
+    Assert (((Get-Content -LiteralPath $membersFile) -join "`n") -eq ($cmsMembers -join "`n")) 'CMS output file matches pipeline output.'
+    $singleMembers = @(& $cms -ProjectPath $cmsProject -FlowPath 'force-app\main\default\flows\Example.flow-meta.xml')
+    Assert ($singleMembers.Count -eq 2) 'CMS single-file scan ignores other inputs and dynamic references.'
+    Assert ([IO.File]::ReadAllText($flowA) -eq $flowXml) 'CMS scan leaves Flow files unchanged.'
+    Assert-Throws { & $cms -ProjectPath $cmsProject -OutputPath 'manifest\cms-members.xml' } 'Output already exists'
+    $emptyFlows = Join-Path $scratch 'empty-flows'
+    [void] (New-Item -Path $emptyFlows -ItemType Directory)
+    Assert-Throws { & $cms -FlowPath $emptyFlows } 'No .flow-meta.xml files'
+    Assert-Throws { & $cms -ProjectPath $cmsProject -FlowPath missing } 'Flow path not found'
+    Assert-Throws { & $cms -FlowPath $membersFile } 'must name a .flow-meta.xml'
+    $invalidFlow = Join-Path $flows 'Invalid.flow-meta.xml'
+    [IO.File]::WriteAllText($invalidFlow, '<Flow><inputParameters><name>contentId</name><value><stringValue>marketing----MC1</stringValue></value></inputParameters></Flow>')
+    $cmsWarnings = @()
+    $invalidMembers = @(& $cms -FlowPath $invalidFlow -WarningVariable cmsWarnings -WarningAction SilentlyContinue)
+    Assert ($invalidMembers.Count -eq 0 -and $cmsWarnings.Count -eq 2) 'Invalid CMS IDs are excluded with explicit warnings.'
+    [IO.File]::WriteAllText($invalidFlow, '<Flow/>')
+    $cmsWarnings = @()
+    $emptyMembers = @(& $cms -FlowPath $invalidFlow -WarningVariable cmsWarnings -WarningAction SilentlyContinue)
+    Assert ($emptyMembers.Count -eq 0 -and $cmsWarnings.Count -eq 1) 'No supported CMS references produces a warning.'
+    [IO.File]::WriteAllText($invalidFlow, '<Flow>')
+    $xmlFailed = $false
+    try { & $cms -FlowPath $invalidFlow | Out-Null } catch { $xmlFailed = $true }
+    Assert $xmlFailed 'Malformed Flow XML fails explicitly.'
+
     $normalize = Join-Path $root 'scripts\compare-data-kit-manifests.ps1'
     $source = Join-Path $scratch 'source'
     [void] (New-Item -Path $source -ItemType Directory)

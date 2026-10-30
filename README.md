@@ -13,6 +13,7 @@ This is a place to keep practical steps, useful commands, lessons learned, and a
 | [Validate and deploy](docs/validate-and-deploy.md) | Check the target, deploy metadata, and complete Data Kit setup |
 | [Troubleshooting](docs/troubleshooting.md) | Recognize common problems and decide what to check |
 | [Script guides](docs/scripts.md) | Use the included retrieval, runtime deployment, and comparison helpers |
+| [Flow CMS dependencies](docs/flow-cms-dependencies.md) | Find CMS references needed for Marketing Cloud Next flow deployments |
 
 ## The basic process
 
