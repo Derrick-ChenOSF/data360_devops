@@ -2,7 +2,7 @@
 
 A small reference library for moving Salesforce Data Cloud (Data 360) configuration between environments.
 
-This is a place to keep practical steps, useful commands, lessons learned, and a few optional PowerShell helpers. There are no GitHub workflows or release pipelines.
+This is a place to keep practical steps, useful commands, lessons learned, and a few optional PowerShell helpers.
 
 ## Start here
 
